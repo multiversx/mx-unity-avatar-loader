@@ -1,0 +1,10 @@
+{
+  "name": "MultiversX.Avatar.Loader",
+  "includePlatforms": [
+    "Editor"
+  ],
+  "references": [
+    "glTFast",
+    "MultiversX.Avatar.Core"
+  ]
+}
