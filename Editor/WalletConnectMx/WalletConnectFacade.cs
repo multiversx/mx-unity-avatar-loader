@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 using MultiversX.Avatar.Core;
 using UnityEditor;
 using WalletConnectSharp.Common.Model.Errors;
-using WalletConnectSharp.Events;
 using WalletConnectSharp.Sign;
 using WalletConnectSharp.Sign.Models;
 using WalletConnectSharp.Sign.Models.Engine;
@@ -26,10 +25,6 @@ namespace MultiversX.Avatar.Loader.Editor.WalletConnectMx
         public ConnectedData ConnectedData;
         public string Address;
         public string AccessToken;
-        private const string SessionDelete = "session_delete";
-        private const string SessionExpire = "session_expire";
-        private const string PairingDelete = "pairing_delete";
-        private const string PairingExpire = "pairing_expire";
 
         public event Action<WalletConnectState> OnStateChange;
 
@@ -69,10 +64,10 @@ namespace MultiversX.Avatar.Loader.Editor.WalletConnectMx
                 return;
             }
 
-            _signClient.On(SessionDelete, OnSessionDelete);
-            _signClient.On(SessionExpire, OnSessionDelete);
-            _signClient.On(PairingExpire, OnSessionDelete);
-            _signClient.On(PairingDelete, OnSessionDelete);
+            _signClient.SessionDeleted += (_, _) => OnSessionDelete();
+            _signClient.SessionExpired += (_, _) => OnSessionDelete();
+            _signClient.PairingExpired += (_, _) => OnSessionDelete();
+            _signClient.PairingDeleted += (_, _) => OnSessionDelete();
         }
 
         private async Task GetSignClient()
